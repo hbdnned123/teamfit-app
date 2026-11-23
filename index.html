@@ -779,6 +779,8 @@
         </div>
       </div>
 
+      <div id="basic-error-msg" class="alert-banner alert-danger" style="display: none;"></div>
+
       <button class="btn btn-primary" id="btn-go-category" style="padding: 14px; font-size: 15px;">
         다음 (카테고리 & 할 일 구성) →
       </button>
@@ -1327,8 +1329,8 @@
       stage: 'splash',
       currentNavTab: 'progress',
       currentUserId: '',
-      teamName: '캡스톤 프로젝트',
-      deadline: '2026-11-30',
+      teamName: '',
+      deadline: '',
       activeCategories: [],
       members: [],
       selectedTasks: [],
@@ -1438,12 +1440,30 @@
        ========================================================= */
     function renderInputBasic() {
       document.getElementById('input-team-name').value = state.teamName || '';
-      document.getElementById('input-deadline').value = state.deadline || '2026-11-30';
+      document.getElementById('input-deadline').value = state.deadline || '';
     }
 
     function goCategoryStep() {
-      state.teamName = document.getElementById('input-team-name').value.trim() || '캡스톤 프로젝트';
-      state.deadline = document.getElementById('input-deadline').value || '2026-11-30';
+      const errorDiv = document.getElementById('basic-error-msg');
+      const teamName = document.getElementById('input-team-name').value.trim();
+      const deadline = document.getElementById('input-deadline').value;
+
+      if (!teamName) {
+        errorDiv.style.display = 'block';
+        errorDiv.innerText = '팀 프로젝트 이름을 입력해주세요.';
+        document.getElementById('input-team-name').focus();
+        return;
+      }
+      if (!deadline) {
+        errorDiv.style.display = 'block';
+        errorDiv.innerText = '마감일을 선택해주세요.';
+        document.getElementById('input-deadline').focus();
+        return;
+      }
+      errorDiv.style.display = 'none';
+
+      state.teamName = teamName;
+      state.deadline = deadline;
       state.stage = 'input-category';
       saveState();
       render();
@@ -2964,8 +2984,8 @@
           currentNavTab: 'progress',
           currentSubTab: 'my',
           currentUserId: '',
-          teamName: '캡스톤 프로젝트',
-          deadline: '2026-11-30',
+          teamName: '',
+          deadline: '',
           activeCategories: [],
           members: [],
           selectedTasks: [],
